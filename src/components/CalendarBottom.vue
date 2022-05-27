@@ -24,80 +24,86 @@
           <table class="table fs-6-5">
             <thead>
               <tr class="text-center">
-                <th scope="col">名稱</th>
+                <!-- <th scope="col"></th> -->
+                <th colspan="2">名稱</th>
                 <th scope="col">價格</th>
                 <th scope="col">24h %</th>
                 <th scope="col">7d %</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(coin, i) in coin" :key="'coin' + i">
+              <tr v-for="(coin, i) in coinInfo" :key="'coin' + i">
                 <td>
-                  <template v-for="(logo, i) in coinLogo[i]" :key="'logo' + i">
-                    <img
-                      :src="logo.image"
-                      :alt="coin[0].name"
-                      style="width: 16px"
-                    />
-                    {{ logo.image }}
-                  </template>
+                  <img :src="coin.image" :alt="coin.name" style="width: 16px" />
+                </td>
+                <td>
+                  <!-- <template v-for="(logo, i) in coinLogo[i]" :key="'logo' + i"> -->
 
-                  {{ coin[0].name }}
-                  <span class="text-secondary ms-2">{{ coin[0].symbol }}</span>
+                  <!-- {{ logo.image }} -->
+                  <!-- </template> -->
+
+                  <p class="d-inline">{{ coin.name }}</p>
+                  <span class="text-secondary ms-3">{{
+                    coin.symbol.toUpperCase()
+                  }}</span>
                 </td>
 
                 <td>
-                  <p class="mb-0">
-                    USD$ {{ coin[0].quote.USD.price.toFixed(2) }}
-                  </p>
+                  <p class="mb-0">USD$ {{ coin.current_price.toFixed(2) }}</p>
 
                   <p class="text-secondary">
                     TWD$
-                    {{ (coin[0].quote.USD.price * exchangeTWD).toFixed(2) }}
+                    {{ (coin.current_price * exchangeTWD).toFixed(2) }}
                   </p>
                 </td>
                 <td>
                   <p
-                    v-if="coin[0].quote.USD.percent_change_24h.toFixed(2) > 0"
+                    v-if="coin.price_change_percentage_24h.toFixed(2) > 0"
                     class="text-success"
                   >
-                    {{ coin[0].quote.USD.percent_change_24h.toFixed(2) }}%
+                    {{ coin.price_change_percentage_24h.toFixed(2) }}%
 
                     <i class="bi bi-caret-up-fill"></i>
                   </p>
                   <p v-else class="text-danger">
-                    {{ coin[0].quote.USD.percent_change_24h.toFixed(2) }}%
+                    {{ coin.price_change_percentage_24h.toFixed(2) }}%
                     <i class="bi bi-caret-down-fill"></i>
                   </p>
                 </td>
                 <td>
                   <p
-                    v-if="coin[0].quote.USD.percent_change_7d.toFixed(2) > 0"
+                    v-if="
+                      coin.price_change_percentage_7d_in_currency.toFixed(2) > 0
+                    "
                     class="text-success"
                   >
-                    {{ coin[0].quote.USD.percent_change_7d.toFixed(2) }}%
+                    {{
+                      coin.price_change_percentage_7d_in_currency.toFixed(2)
+                    }}%
 
                     <i class="bi bi-caret-up-fill"></i>
                   </p>
                   <p v-else class="text-danger">
-                    {{ coin[0].quote.USD.percent_change_7d.toFixed(2) }}%
+                    {{
+                      coin.price_change_percentage_7d_in_currency.toFixed(2)
+                    }}%
                     <i class="bi bi-caret-down-fill"></i>
                   </p>
                 </td>
 
                 <!-- <td
-                :class="{
-                  textSuccess: coin[0].quote.USD.percent_change_7d > 0,
-                  textDanger: coin[0].quote.USD.percent_change_7d < 0
-                }"
-              >
-                {{ coin[0].quote.USD.percent_change_7d.toFixed(2) }}%
-                <i
-                  class="bi bi-caret-up-fill text-success"
-                  v-if="coin[0].quote.USD.percent_change_7d.toFixed(2) > 0"
-                ></i>
-                <i class="bi bi-caret-down-fill text-danger" v-else></i>
-              </td> -->
+                  :class="{
+                    textSuccess: coin[0].quote.USD.percent_change_7d > 0,
+                    textDanger: coin[0].quote.USD.percent_change_7d < 0
+                  }"
+                >
+                  {{ coin[0].quote.USD.percent_change_7d.toFixed(2) }}%
+                  <i
+                    class="bi bi-caret-up-fill text-success"
+                    v-if="coin[0].quote.USD.percent_change_7d.toFixed(2) > 0"
+                  ></i>
+                  <i class="bi bi-caret-down-fill text-danger" v-else></i>
+                </td> -->
               </tr>
               <!-- <tr>
               <td>Bitcoin</td>
@@ -161,23 +167,24 @@ export default {
           image: 'https://cryptologos.cc/logos/solana-sol-logo.png?v=022'
         }
       ],
-      farms: [
-        {
-          farmer: 'John',
-          field: 12,
-          chick: 200
-        },
-        {
-          farmer: 'Joy',
-          field: 12,
-          chick: 200
-        },
-        {
-          farmer: 'Joy',
-          field: 12,
-          chick: 200
-        }
-      ],
+      coinInfo: {},
+      // farms: [
+      //   {
+      //     farmer: 'John',
+      //     field: 12,
+      //     chick: 200
+      //   },
+      //   {
+      //     farmer: 'Joy',
+      //     field: 12,
+      //     chick: 200
+      //   },
+      //   {
+      //     farmer: 'Joy',
+      //     field: 12,
+      //     chick: 200
+      //   }
+      // ],
       exchangeTWD: ''
     }
   },
@@ -218,6 +225,20 @@ export default {
         .catch((err) => {
           console.log(err)
         })
+    },
+    getCoinInfo() {
+      const api =
+        'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=green-satoshi-token,stepn,solana&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=7d'
+
+      this.$http
+        .get(api)
+        .then((res) => {
+          this.coinInfo = res.data
+          console.log(res)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
   },
   computed: {
@@ -233,8 +254,9 @@ export default {
     // }
   },
   mounted() {
-    this.getCoin()
+    // this.getCoin()
     this.getExchangeRate()
+    this.getCoinInfo()
   }
 }
 </script>
