@@ -116,9 +116,19 @@
                   <p class="text-primary">GST Income</p>
                 </div>
                 <div class="col-8">
-                  <p class="text-primary">
+                  <p
+                    v-if="!tempTodo.gst || !tempTodo.repair"
+                    class="text-primary"
+                  >
+                    0
+                  </p>
+                  <p class="text-primary" v-else>
                     {{ tempTodo.gst - tempTodo.repair }}
                   </p>
+                  <!-- <input type="text" class="form-control" v-model="income" /> -->
+                  <!-- <p class="text-primary">
+                    {{ calculate }}
+                  </p> -->
                 </div>
               </div>
               <div class="text-end">
@@ -221,9 +231,10 @@ export default {
     return {
       showed: false,
       tempTodo: {
-        id: nanoid(),
-        income: 0
+        id: nanoid()
+        // income: '0'
       },
+      income: 0,
       tab: ''
     }
   },
@@ -237,10 +248,17 @@ export default {
       this.$emit('add-todo', this.tempTodo)
       console.log(this.tempTodo)
     }
-    //  calculate() {
-    //   this.tempTodo.income = this.gst - this.repair
+    // calculate() {
+    //   if (this.tempTodo.gst) {
+    //     return this.tempTodo.gst - this.tempTodo.repair
+    //   }
     // }
   },
+  // computed: {
+  //   calculate() {
+  //     return this.tempTodo.income = this.tempTodo.gst - this.tempTodo.repair
+  //   }
+  // },
 
   watch: {
     showModal(newVal, oldVal) {
@@ -250,7 +268,30 @@ export default {
       //   this.tempTodo.income = this.gst - this.repair
       this.tempTodo = this.todos
       // this.todos = this.tempTodo
+      this.income = this.tempTodo.gst - this.tempTodo.repair
+    },
+    income() {
+      // if (this.tempTodo.gst) {
+      //   this.income = this.calculate
+      // }
     }
+    // calculate() {
+    //   this.income = this.calculate
+    // }
+  },
+  computed: {
+    // calculate() {
+    //   return this.tempTodo.gst - this.tempTodo.repair
+    // }
+    // calculate: {
+    //   get() {
+    //     return (this.income = this.calculate)
+    //   },
+    //   set(newValue) {
+    //     let newValue = this.income
+    //     this.income = this.tempTodo.gst - this.tempTodo.repair
+    //   }
+    // }
   },
 
   mounted() {
@@ -335,5 +376,9 @@ textarea::-webkit-textarea-placeholder {
 .nav-link:hover {
   background-color: #fdfbf5;
   color: rgb(114, 113, 113);
+}
+
+.z-index {
+  z-index: 3;
 }
 </style>

@@ -28,28 +28,30 @@
       <li
         v-for="(day, i) in calendarAllDay"
         :key="day"
-        class="day border-end border-top position-relative px-2 pt-1"
+        class="day border-end border-top position-relative px-2 pt-1 list"
         @click="openModal(day, 'new')"
       >
         <!-- @click="showed = true" @click="addTodo(day)"
         @click="openModal(day.id)"-->
-        <div
-          class="bgToday pt-1 mx-auto"
-          :class="{
-            highlightToday:
-              calendarAllDay[i].year === today.year &&
-              calendarAllDay[i].month === today.month &&
-              calendarAllDay[i].date === today.date
-          }"
-        >
-          <h3
-            class="h7 text-center"
+        <div class="bg-white sticky-top zindex">
+          <div
+            class="bgToday pt-1 mx-auto"
             :class="{
-              textOtherday: calendarAllDay[i].month !== calendar.month
+              highlightToday:
+                calendarAllDay[i].year === today.year &&
+                calendarAllDay[i].month === today.month &&
+                calendarAllDay[i].date === today.date
             }"
           >
-            {{ day.date }}
-          </h3>
+            <h3
+              class="h7 text-center"
+              :class="{
+                textOtherday: calendarAllDay[i].month !== calendar.month
+              }"
+            >
+              {{ day.date }}
+            </h3>
+          </div>
         </div>
 
         <!-- <div class="text-start">{{ calendarAllDay[i].count }}</div> -->
@@ -57,7 +59,7 @@
         <ul
           v-for="item in day.todos"
           :key="item"
-          class="list-unstyled fs-7 text-start"
+          class="list-unstyled fs-7 text-start position-absolute pt-1"
         >
           <li
             class="bg-warning mb-1 pointer li-hover"
@@ -445,7 +447,7 @@ export default {
   /* height: 50vh; */
   /* position: fixed;
   top: 0; */
-  overflow: hidden;
+  /* overflow: hidden; */
   scroll-behavior: smooth;
 }
 .list-x {
@@ -474,5 +476,13 @@ export default {
 
 .li-hover:hover {
   background-color: #faf4ec !important;
+}
+
+.zindex {
+  z-index: ;
+}
+
+.zindex-2 {
+  z-index: -3;
 }
 </style>
