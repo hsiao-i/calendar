@@ -62,19 +62,21 @@
           class="list-unstyled fs-7 text-start pt-1 z-index--1"
         >
           <li
-            class="bg-warning mb-1 pointer li-hover"
+            class="bg-warning pointer li-hover rounded-10 px-1"
             @click.stop="openModal(day, 'edit', item)"
             v-if="item.gst"
           >
             GST {{ item.gst - item.repair }}
           </li>
           <li
-            class="pointer li-hover"
+            class="pointer li-hover px-1 word"
             @click.stop="openModal(day, 'edit', item)"
             v-if="item.title"
           >
             <div class="d-flex align-items-center">
-              <div class="dot me-1"></div>
+              <div>
+                <div class="dot me-1"></div>
+              </div>
               <p class="mb-0">{{ item.title }}</p>
             </div>
           </li>
@@ -494,14 +496,25 @@ export default {
   letter-spacing: 0.3px;
 }
 
+.rounded-10 {
+  border-radius: 10px;
+}
+
 .li-hover:hover {
   background-color: #faf4ec !important;
+  border-radius: 10px;
+  padding: 0px 4px;
 }
 .z-index-1 {
   z-index: 1;
 }
 .z-index-0 {
   z-index: 0;
+}
+
+.word {
+  overflow: hidden;
+  white-space: nowrap;
 }
 /* .zindex {
   z-index: ;
