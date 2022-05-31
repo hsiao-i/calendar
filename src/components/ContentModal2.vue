@@ -9,7 +9,9 @@
       class="position-absolute d-flex justify-content-center align-items-center top-0 start-0 h-100 w-100"
     >
       <!-- 內容層 -->
-      <div class="content rounded-3 shadow list position-relative">
+      <div
+        class="content rounded-3 shadow list position-relative "
+      >
         <div
           class="d-flex justify-content-between align-items-center bg-primary px-2 py-1 rounded-top sticky-top"
         >

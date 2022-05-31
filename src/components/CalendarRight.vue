@@ -28,14 +28,14 @@
       <li
         v-for="(day, i) in calendarAllDay"
         :key="day"
-        class="day border-end border-top position-relative px-2 pt-1 list"
+        class="day border-end border-top position-relative px-2 list z-index-0"
         @click="openModal(day, 'new')"
       >
         <!-- @click="showed = true" @click="addTodo(day)"
         @click="openModal(day.id)"-->
-        <div class="bg-white sticky-top zindex">
+        <div class="bg-white sticky-top z-index-1 pt-1">
           <div
-            class="bgToday pt-1 mx-auto"
+            class="bgToday mx-auto"
             :class="{
               highlightToday:
                 calendarAllDay[i].year === today.year &&
@@ -44,7 +44,7 @@
             }"
           >
             <h3
-              class="h7 text-center"
+              class="h7 text-center pt-1"
               :class="{
                 textOtherday: calendarAllDay[i].month !== calendar.month
               }"
@@ -59,7 +59,7 @@
         <ul
           v-for="item in day.todos"
           :key="item"
-          class="list-unstyled fs-7 text-start position-absolute pt-1"
+          class="list-unstyled fs-7 text-start pt-1 z-index--1"
         >
           <li
             class="bg-warning mb-1 pointer li-hover"
@@ -262,21 +262,41 @@ export default {
       // console.log(this.temp)
       // console.log(this.tempTodoOut)
       const content = this.temp
+      content.id = nanoid()
+      // const id = nanoid()
       // const content = tempTodo
-      console.log(this.temp)
+      // console.log(this.temp)
 
-      if (content) {
-        const y = this.todos[year] || {}
-        const m = this.todos[year][month] || {}
-        const d = this.todos[year][month][date] || []
+      const y = this.todos[year] || {}
+      const m = this.todos[year][month] || {}
+      let d = this.todos[year][month][date] || []
 
+      if (content && this.isNew === true) {
         d.push(content)
+        // d.push((content.id = nanoid()))
 
         // 指定到年之後，把他的整包物件塞進去
         this.todos[year] = y
         this.todos[year][month] = m
         this.todos[year][month][date] = d
+        // console.log('new')
+        // console.log(this.isNew)
+        // console.log(this.todos[year][month][date])
+      } else if (content && this.isNew === false) {
+        d = this.temp
+        // console.log('edit')
+        // console.log(this.isNew)
       }
+
+      // else if (this.todos[year][month][date].gst) {
+      //   d.push(content.title, content.note)
+      //   console.log('gst')
+      // }
+      // else if (this.todos[year][month][date].title) {
+      //   this.todos[year][month][date] = this.temp
+      //   console.log('title')
+      // }
+
       this.temp = {}
       this.closeModal()
     },
@@ -477,12 +497,17 @@ export default {
 .li-hover:hover {
   background-color: #faf4ec !important;
 }
-
-.zindex {
+.z-index-1 {
+  z-index: 1;
+}
+.z-index-0 {
+  z-index: 0;
+}
+/* .zindex {
   z-index: ;
 }
 
 .zindex-2 {
   z-index: -3;
-}
+} */
 </style>
