@@ -9,9 +9,7 @@
       class="position-absolute d-flex justify-content-center align-items-center top-0 start-0 h-100 w-100"
     >
       <!-- 內容層 -->
-      <div
-        class="content rounded-3 shadow list position-relative "
-      >
+      <div class="content rounded-3 shadow list position-relative">
         <div
           class="d-flex justify-content-between align-items-center bg-primary px-2 py-1 rounded-top sticky-top"
         >
@@ -125,9 +123,17 @@
                     0
                   </p>
                   <p class="text-primary" v-else>
-                    {{ tempTodo.gst - tempTodo.repair }}
+                    {{ calIncome }}
                   </p>
-                  <!-- <input type="text" class="form-control" v-model="income" /> -->
+
+                  <!-- <p class="text-primary" v-else>
+                    {{ tempTodo.gst - tempTodo.repair }}
+                  </p> -->
+                  <!-- <input
+                    type="text"
+                    class="form-control"
+                    v-model="tempTodo.income"
+                  /> -->
                   <!-- <p class="text-primary">
                     {{ calculate }}
                   </p> -->
@@ -207,7 +213,14 @@
                   class="btn btn-primary text-white"
                   @click="sendTodo()"
                 >
-                  Save
+                  儲存
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-primary text-white"
+                  @click="sendTodo()"
+                >
+                  編輯儲存
                 </button>
               </div>
             </div>
@@ -222,7 +235,7 @@
 // import bootstrap from 'bootstrap/js/dist/tab'
 import Tab from 'bootstrap/js/dist/tab'
 
-import { nanoid } from 'nanoid'
+// import { nanoid } from 'nanoid'
 export default {
   props: {
     showModal: {},
@@ -233,11 +246,11 @@ export default {
     return {
       showed: false,
       tempTodo: {
-        id: nanoid()
-        // income: '0'
+        // id: nanoid()
+        income: '0'
       },
-      income: 0,
       tab: ''
+      // income: 0
     }
   },
   methods: {
@@ -248,19 +261,9 @@ export default {
     },
     sendTodo() {
       this.$emit('add-todo', this.tempTodo)
-      console.log(this.tempTodo)
+      // console.log(this.tempTodo)
     }
-    // calculate() {
-    //   if (this.tempTodo.gst) {
-    //     return this.tempTodo.gst - this.tempTodo.repair
-    //   }
-    // }
   },
-  // computed: {
-  //   calculate() {
-  //     return this.tempTodo.income = this.tempTodo.gst - this.tempTodo.repair
-  //   }
-  // },
 
   watch: {
     showModal(newVal, oldVal) {
@@ -270,30 +273,15 @@ export default {
       //   this.tempTodo.income = this.gst - this.repair
       this.tempTodo = this.todos
       // this.todos = this.tempTodo
-      this.income = this.tempTodo.gst - this.tempTodo.repair
     },
     income() {
-      // if (this.tempTodo.gst) {
-      //   this.income = this.calculate
-      // }
+      this.tempTodo.income = this.calIncome
     }
-    // calculate() {
-    //   this.income = this.calculate
-    // }
   },
   computed: {
-    // calculate() {
-    //   return this.tempTodo.gst - this.tempTodo.repair
-    // }
-    // calculate: {
-    //   get() {
-    //     return (this.income = this.calculate)
-    //   },
-    //   set(newValue) {
-    //     let newValue = this.income
-    //     this.income = this.tempTodo.gst - this.tempTodo.repair
-    //   }
-    // }
+    calIncome() {
+      return this.tempTodo.gst - this.tempTodo.repair
+    }
   },
 
   mounted() {
