@@ -136,6 +136,7 @@
   >
   </ContentModal2>
   <CalendarBottom />
+  <!-- {{ calculateMonthIncome }} -->
 </template>
 
 <script>
@@ -173,6 +174,7 @@ export default {
                 gst: 10,
                 resilience: 0,
                 repair: 2,
+                income: 13,
                 title: '你好',
                 category: 'work',
                 note: 'write something'
@@ -221,13 +223,16 @@ export default {
         gst: '',
         resilience: '',
         repair: '',
+        income: '',
         title: '',
         category: '',
         note: ''
       },
       tempTodoOut: {},
       todosDate: {}, // 點擊到的那一天的年月日
-      isNew: true
+      isNew: true,
+      monthIncome: 0,
+      monthIncomeSave: []
     }
   },
   methods: {
@@ -236,26 +241,20 @@ export default {
         item.todos.splice(i, 1)
       }
     },
-    editTodo2(todo) {
-      const content = window.prompt('請輸入修改內容', todo.content)
-      // todo.content 等於是把原始內容帶給他
+    // editTodo2(todo) {
+    //   const content = window.prompt('請輸入修改內容', todo.content)
+    // todo.content 等於是把原始內容帶給他
 
-      if (content.trim()) {
-        todo.content = content.trim()
-      }
-    },
-    editTodo(item) {
-      this.showed = true
-      // console.log(item)
-      // console.log(this.todos)
-
-      if (item) {
-        this.temp = item
-        // console.log(item)
-        // console.log(this.temp)
-        // console.log('edit')
-      }
-    },
+    //   if (content.trim()) {
+    //     todo.content = content.trim()
+    //   }
+    // },
+    // editTodo(item) {
+    //   this.showed = true
+    //   if (item) {
+    //     this.temp = item
+    //   }
+    // },
     addTodo({ year, month, date }) {
       // const content = window.prompt('請輸入內容', '')
       // if (content.trim()) {
@@ -264,7 +263,10 @@ export default {
       // console.log(this.temp)
       // console.log(this.tempTodoOut)
       const content = this.temp
-      content.id = nanoid()
+
+      content.income = this.temp.gst - this.temp.repair
+      console.log(content.income)
+
       // const id = nanoid()
       // const content = tempTodo
       // console.log(this.temp)
@@ -272,32 +274,49 @@ export default {
       const y = this.todos[year] || {}
       const m = this.todos[year][month] || {}
       let d = this.todos[year][month][date] || []
+      // const gstincome = this.todos[year][month][date].income
 
       if (content && this.isNew === true) {
+        // let monthTotal = ''
+        content.id = nanoid()
         d.push(content)
-        // d.push((content.id = nanoid()))
 
         // 指定到年之後，把他的整包物件塞進去
         this.todos[year] = y
         this.todos[year][month] = m
         this.todos[year][month][date] = d
-        // console.log('new')
-        // console.log(this.isNew)
-        // console.log(this.todos[year][month][date])
+
+        this.monthIncomeSave.push({ id: content.id, income: content.income })
+        console.log(this.monthIncomeSave)
+
+        let cal = 0
+        this.monthIncomeSave.forEach((item) => {
+          cal += item.income
+        })
+        this.monthIncome = cal
       } else if (content && this.isNew === false) {
         d = this.temp
-        // console.log('edit')
-        // console.log(this.isNew)
-      }
+        this.temp.income = this.temp.gst - this.temp.repair
 
-      // else if (this.todos[year][month][date].gst) {
-      //   d.push(content.title, content.note)
-      //   console.log('gst')
-      // }
-      // else if (this.todos[year][month][date].title) {
-      //   this.todos[year][month][date] = this.temp
-      //   console.log('title')
-      // }
+        const filter = this.monthIncomeSave.filter((item) => {
+          return d.id === item.id
+        })
+        // 找到 index 位置
+        const index = this.monthIncomeSave.indexOf(filter[0])
+
+        // 更新 income 的數字
+        this.monthIncomeSave[index].income = this.temp.income
+
+        let cal = 0
+        this.monthIncomeSave.forEach((item) => {
+          cal += item.income
+          // console.log(item.income)
+        })
+        this.monthIncome = cal
+
+        // console.log('edit')
+        // console.log(this.monthIncome)
+      }
 
       this.temp = {}
       this.closeModal()
@@ -335,23 +354,23 @@ export default {
       //   console.log('new')
       // }
 
-      console.log(this.todos)
+      // console.log(this.todos)
       // if (day.todos && day.id === this.temp.id) {
       //   this.temp = { ...day.todos }
       // } else {
       //   this.temp = {}
       // }
     },
-    openEditModal(item) {
-      this.showed = true
-      console.log(item)
-      console.log(this.todos)
+    // openEditModal(item) {
+    //   this.showed = true
+    //   console.log(item)
+    //   console.log(this.todos)
 
-      if (item) {
-        this.temp = item
-        console.log(this.temp)
-      }
-    },
+    //   if (item) {
+    //     this.temp = item
+    //     console.log(this.temp)
+    //   }
+    // },
     closeModal() {
       this.showed = false
     },
@@ -378,7 +397,15 @@ export default {
         this.calendar.month = month
       }
     }
+    // calIncomeMonth() {
+    //   console.log(this.getTodos)
+    // }
   },
+  // watch: {
+  //   income() {
+  //     this.income = this.temp.gst - this.temp.repair
+  //   }
+  // },
   computed: {
     calendarFirstDay() {
       const first = new Date(this.calendar.year, this.calendar.month, 1)
@@ -415,6 +442,8 @@ export default {
         d.todos = this.getTodos(d)
         // d.id = nanoid()
         // 這樣到時候要顯示 todolist 的時候可以用
+        d.gst = this.getTodos(d).income
+        // console.log(this.getTodos(d).income)
         data.push(d)
       }
 
@@ -426,6 +455,18 @@ export default {
         return data.month === this.calendar.month && data.count
       })
     }
+    // calIncomeMonth() {
+    //   return this.getTodos()
+    // }
+
+    // calculateMonthIncome({ year, month, date }) {
+    //   let total = ''
+    //   const gst = this.todos[year][month][date].gst
+    //   gst.forEach((item) => {
+    //     total += item
+    //   })
+    //   return total
+    // }
     // calculateGst() {
     //   return this.temp.gst - this.temp.repair
     // }
@@ -458,18 +499,9 @@ export default {
   height: 22px;
 }
 
-/* .bgDot {
-  width: 10px;
-  height: 10px;
-  background-color: #f6c994;
-} */
-
 .list {
   overflow-y: scroll;
-  /* height: 50vh; */
-  /* position: fixed;
-  top: 0; */
-  /* overflow: hidden; */
+
   scroll-behavior: smooth;
 }
 .list-x {
