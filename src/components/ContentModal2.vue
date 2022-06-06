@@ -213,15 +213,15 @@
                   class="btn btn-primary text-white"
                   @click="sendTodo()"
                 >
-                  儲存
+                  Save
                 </button>
-                <button
+                <!-- <button
                   type="button"
                   class="btn btn-primary text-white"
                   @click="sendTodo()"
                 >
                   編輯儲存
-                </button>
+                </button> -->
               </div>
             </div>
           </div>
