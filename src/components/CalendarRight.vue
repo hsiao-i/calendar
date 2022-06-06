@@ -1,23 +1,28 @@
 <template>
   <div class="mt-3">
-    <h2 class="h4 ms-2">
-      {{ calendar.year }} 年 {{ calendar.month + 1 }} 月
-      <i
-        class="bi bi-caret-left-fill pointer text-secondary ms-2"
-        @click="changeMonth(-1)"
-      ></i>
-      <button
-        type="button"
-        class="btn btn-outline-secondary btn-sm"
-        @click="setToday"
-      >
-        今天
-      </button>
-      <i
-        class="bi bi-caret-right-fill pointer text-secondary"
-        @click="changeMonth(1)"
-      ></i>
-    </h2>
+    <div class="d-flex justify-content-between">
+      <h2 class="h4 ms-2">
+        {{ calendar.year }} 年 {{ calendar.month + 1 }} 月
+        <i
+          class="bi bi-caret-left-fill pointer text-secondary ms-2"
+          @click="changeMonth(-1)"
+        ></i>
+        <button
+          type="button"
+          class="btn btn-outline-secondary btn-sm"
+          @click="setToday"
+        >
+          今天
+        </button>
+        <i
+          class="bi bi-caret-right-fill pointer text-secondary"
+          @click="changeMonth(1)"
+        ></i>
+      </h2>
+      <p class="bg-warning px-3 py-1 rounded-3 me-2">
+        目前收益 <span class="text-primary ms-2"> {{ monthIncome }} </span> GST
+      </p>
+    </div>
     <ul class="d-flex list-unstyled mt-3 border-top pt-3">
       <div v-for="weekDay in week" :key="weekDay" class="weekDay text-center">
         {{ weekDay }}
@@ -61,12 +66,30 @@
           :key="item"
           class="list-unstyled fs-7 text-start pt-1 z-index--1"
         >
+          <!-- <li
+            class="bg-warning pointer li-hover rounded-10 px-1"
+            @click.stop="openModal(day, 'edit', item)"
+            v-if="item.gst"
+          >
+            <div class="d-flex justify-content-between">
+              <p class="mb-0">GST {{ item.gst - item.repair }}</p>
+              <i class="bi bi-x-lg text-secondary"></i>
+            </div>
+          </li> -->
           <li
             class="bg-warning pointer li-hover rounded-10 px-1"
             @click.stop="openModal(day, 'edit', item)"
             v-if="item.gst"
           >
-            GST {{ item.gst - item.repair }}
+            <div class="d-flex justify-content-between">
+              <p class="mb-0">GST {{ item.gst - item.repair }}</p>
+              <div class="deleteButton">
+                <i
+                  class="bi bi-x-lg text-secondary text-center pb-1"
+                  @click.stop="click"
+                ></i>
+              </div>
+            </div>
           </li>
           <li
             class="pointer li-hover px-1 word"
@@ -236,10 +259,13 @@ export default {
     }
   },
   methods: {
-    deleteTodo(item, i) {
+    deleteTodo2(item, i) {
       if (window.confirm('是否確認刪除')) {
         item.todos.splice(i, 1)
       }
+    },
+    click() {
+      console.log('click')
     },
     // editTodo2(todo) {
     //   const content = window.prompt('請輸入修改內容', todo.content)
@@ -534,7 +560,7 @@ export default {
 
 .li-hover:hover {
   background-color: #faf4ec !important;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   padding: 0px 4px;
 }
 .z-index-1 {
@@ -548,6 +574,20 @@ export default {
   overflow: hidden;
   white-space: nowrap;
 }
+.deleteButton {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+}
+.deleteButton:hover {
+  display: block;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  color: #ffffff;
+}
+
 /* .zindex {
   z-index: ;
 }

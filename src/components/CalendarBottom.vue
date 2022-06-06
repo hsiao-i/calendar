@@ -1,97 +1,93 @@
 <template>
   <div class="container">
-    <div class="row">
-      <div class="col-4">
-        <div class="shadow rounded-3 p-3 mb-3">
-          <h4 class="text-center fs-5 mb-4">美元匯率</h4>
-          <div class="d-flex justify-content-around">
-            <p class="text-secondary">1 美元等於</p>
-            <p class="fw-bold">$TWD {{ Number(exchangeTWD).toFixed(2) }}</p>
-          </div>
-        </div>
+    <!-- <div class="row">
+      <div class="col-4"> -->
+    <div class="shadow rounded-3 p-3 mb-3">
+      <h4 class="text-center fs-5 mb-4">美元匯率</h4>
+      <div class="d-flex justify-content-around">
+        <p class="text-secondary">1 美元等於</p>
+        <p class="fw-bold">$TWD {{ Number(exchangeTWD).toFixed(2) }}</p>
+      </div>
+    </div>
 
-        <div class="shadow rounded-3 p-3 bg-warning">
+    <!-- <div class="shadow rounded-3 p-3 bg-warning">
           <h4 class="text-center fs-5 mb-4">GST 收益</h4>
           <div class="text-center">
             <p>本月收益 ＿＿＿ GST</p>
             <p>目前收益 ＿＿＿ GST</p>
           </div>
-        </div>
-      </div>
-      <div class="col-8">
-        <div class="rounded-3 shadow px-5 py-3">
-          <h4 class="text-center fs-5 mb-4">加密貨幣價錢</h4>
-          <table class="table fs-6-5">
-            <thead>
-              <tr class="text-center">
-                <!-- <th scope="col"></th> -->
-                <th colspan="2">名稱</th>
-                <th scope="col">價格</th>
-                <th scope="col">24h %</th>
-                <th scope="col">7d %</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(coin, i) in coinInfo" :key="'coin' + i">
-                <td>
-                  <img :src="coin.image" :alt="coin.name" style="width: 16px" />
-                </td>
-                <td>
-                  <!-- <template v-for="(logo, i) in coinLogo[i]" :key="'logo' + i"> -->
+        </div> -->
+    <!-- </div> -->
+    <!-- <div class="col-8"> -->
+    <div class="rounded-3 shadow px-5 py-3">
+      <h4 class="text-center fs-5 mb-4">加密貨幣價錢</h4>
+      <table class="table fs-6-5">
+        <thead>
+          <tr class="text-center">
+            <!-- <th scope="col"></th> -->
+            <th colspan="2">名稱</th>
+            <th scope="col">價格</th>
+            <th scope="col">24h %</th>
+            <th scope="col">7d %</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(coin, i) in coinInfo" :key="'coin' + i">
+            <td>
+              <img :src="coin.image" :alt="coin.name" style="width: 16px" />
+            </td>
+            <td>
+              <!-- <template v-for="(logo, i) in coinLogo[i]" :key="'logo' + i"> -->
 
-                  <!-- {{ logo.image }} -->
-                  <!-- </template> -->
+              <!-- {{ logo.image }} -->
+              <!-- </template> -->
 
-                  <p class="d-inline">{{ coin.name }}</p>
-                  <span class="text-secondary ms-3">{{
-                    coin.symbol.toUpperCase()
-                  }}</span>
-                </td>
+              <p class="d-inline">{{ coin.name }}</p>
+              <span class="text-secondary ms-3">{{
+                coin.symbol.toUpperCase()
+              }}</span>
+            </td>
 
-                <td>
-                  <p class="mb-0">USD$ {{ coin.current_price.toFixed(2) }}</p>
+            <td>
+              <p class="mb-0">USD$ {{ coin.current_price.toFixed(2) }}</p>
 
-                  <p class="text-secondary">
-                    TWD$
-                    {{ (coin.current_price * exchangeTWD).toFixed(2) }}
-                  </p>
-                </td>
-                <td>
-                  <p
-                    v-if="coin.price_change_percentage_24h.toFixed(2) > 0"
-                    class="text-success"
-                  >
-                    {{ coin.price_change_percentage_24h.toFixed(2) }}%
+              <p class="text-secondary">
+                TWD$
+                {{ (coin.current_price * exchangeTWD).toFixed(2) }}
+              </p>
+            </td>
+            <td>
+              <p
+                v-if="coin.price_change_percentage_24h.toFixed(2) > 0"
+                class="text-success"
+              >
+                {{ coin.price_change_percentage_24h.toFixed(2) }}%
 
-                    <i class="bi bi-caret-up-fill"></i>
-                  </p>
-                  <p v-else class="text-danger">
-                    {{ coin.price_change_percentage_24h.toFixed(2) }}%
-                    <i class="bi bi-caret-down-fill"></i>
-                  </p>
-                </td>
-                <td>
-                  <p
-                    v-if="
-                      coin.price_change_percentage_7d_in_currency.toFixed(2) > 0
-                    "
-                    class="text-success"
-                  >
-                    {{
-                      coin.price_change_percentage_7d_in_currency.toFixed(2)
-                    }}%
+                <i class="bi bi-caret-up-fill"></i>
+              </p>
+              <p v-else class="text-danger">
+                {{ coin.price_change_percentage_24h.toFixed(2) }}%
+                <i class="bi bi-caret-down-fill"></i>
+              </p>
+            </td>
+            <td>
+              <p
+                v-if="
+                  coin.price_change_percentage_7d_in_currency.toFixed(2) > 0
+                "
+                class="text-success"
+              >
+                {{ coin.price_change_percentage_7d_in_currency.toFixed(2) }}%
 
-                    <i class="bi bi-caret-up-fill"></i>
-                  </p>
-                  <p v-else class="text-danger">
-                    {{
-                      coin.price_change_percentage_7d_in_currency.toFixed(2)
-                    }}%
-                    <i class="bi bi-caret-down-fill"></i>
-                  </p>
-                </td>
+                <i class="bi bi-caret-up-fill"></i>
+              </p>
+              <p v-else class="text-danger">
+                {{ coin.price_change_percentage_7d_in_currency.toFixed(2) }}%
+                <i class="bi bi-caret-down-fill"></i>
+              </p>
+            </td>
 
-                <!-- <td
+            <!-- <td
                   :class="{
                     textSuccess: coin[0].quote.USD.percent_change_7d > 0,
                     textDanger: coin[0].quote.USD.percent_change_7d < 0
@@ -104,19 +100,19 @@
                   ></i>
                   <i class="bi bi-caret-down-fill text-danger" v-else></i>
                 </td> -->
-              </tr>
-              <!-- <tr>
+          </tr>
+          <!-- <tr>
               <td>Bitcoin</td>
               <td>BTC</td>
               <td>NT$___</td>
               <td>2.18%</td>
               <td></td>
             </tr> -->
-            </tbody>
-          </table>
-        </div>
-      </div>
+        </tbody>
+      </table>
     </div>
+    <!-- </div> -->
+    <!-- </div> -->
   </div>
 
   <!-- <table class="table">
